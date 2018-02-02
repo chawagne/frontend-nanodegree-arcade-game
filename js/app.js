@@ -7,9 +7,9 @@ class Enemy {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.speed = 100;
+    this.speed = this.randomSpeed();
     this.x = 0;
-    this.y = 100;
+    this.y = this.randomLocation();
   }
 
   // Update the enemy's position, required method for game
@@ -18,13 +18,44 @@ class Enemy {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x += (1 * dt);
+    this.x += (this.speed * dt);
   }
 
   // Draw the enemy on the screen, required method for game
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+  randomSpeed() {
+    //Randomly determine speed
+    let randomNum = Math.floor(Math.random() * 3);
+    switch (randomNum){
+      //Slow speed
+      case 0:
+      return 100;
+      //Medium speed
+      case 1:
+      return 150;
+      //Fast speed
+      case 2:
+      return 300;
+    }
+  }
+  randomLocation() {
+    //Randomly determine speed
+    let randomNum = Math.floor(Math.random() * 3);
+    switch (randomNum){
+      //Slow speed
+      case 0:
+      return 62;
+      //Medium speed
+      case 1:
+      return 145;
+      //Fast speed
+      case 2:
+      return 228;
+    }
+  }
+
 }
 
 // Now write your own player class
