@@ -83,13 +83,22 @@ class Player {
   }
 
   update() {
-    //collision detection
-    allEnemies.forEach(enemy => {
-      if (Math.floor(enemy.x) === Math.floor(player.x)) {
-        console.log('hit');
-      }
-    })
+    this.checkCollisions(allEnemies);
   }
+   checkCollisions(allEnemies) {
+
+     allEnemies.forEach( (enemy) => {
+        let location = {
+          upLeft: enemy.x + enemy.hitBox.hitX,
+          upRight: this.upLeft + enemy.hitBox.width,
+          downLeft:0,
+          downRight:0,
+        }
+    //   console.log(enemy.x + enemy.hitBox.hitX);
+     });
+}
+
+
   render() {
     drawHitBox(this.x + this.hitBox.hitX, this.y + this.hitBox.hitY, this.hitBox.width, this.hitBox.height);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -130,7 +139,7 @@ class Player {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 let debug = true;
-let allEnemies = [new Enemy()];
+let allEnemies = [];
 const player = new Player();
 
 // This listens for key presses and sends the keys to your
@@ -152,4 +161,12 @@ let drawHitBox = (x, y, width, height) => {
   if (debug === true) {
     ctx.strokeRect(x, y, width, height);
   }
+}
+
+//spawn enemy
+let spawnEnemy = () => {
+  let roll = Math.floor(Math.random() * 1000) + 1;
+  if (roll >= 990) {
+  allEnemies.push(new Enemy)
+}
 }

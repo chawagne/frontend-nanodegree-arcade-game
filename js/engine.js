@@ -79,6 +79,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
+        spawnEnemy();
         // checkCollisions();
     }
 
