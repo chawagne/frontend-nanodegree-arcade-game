@@ -23,36 +23,37 @@ class Enemy {
 
   // Draw the enemy on the screen, required method for game
   render() {
+    drawHitBox(this);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
   randomSpeed() {
     //Randomly determine speed
     let randomNum = Math.floor(Math.random() * 3);
-    switch (randomNum){
+    switch (randomNum) {
       //Slow speed
       case 0:
-      return 100;
-      //Medium speed
+        return 100;
+        //Medium speed
       case 1:
-      return 150;
-      //Fast speed
+        return 150;
+        //Fast speed
       case 2:
-      return 300;
+        return 300;
     }
   }
   randomLocation() {
     //Randomly determine speed
     let randomNum = Math.floor(Math.random() * 3);
-    switch (randomNum){
+    switch (randomNum) {
       //Slow speed
       case 0:
-      return 62;
-      //Medium speed
+        return 62;
+        //Medium speed
       case 1:
-      return 145;
-      //Fast speed
+        return 145;
+        //Fast speed
       case 2:
-      return 228;
+        return 228;
     }
   }
 
@@ -70,9 +71,15 @@ class Player {
   }
 
   update() {
-    //What goes here?  *shrug*
+    //collision detection
+    allEnemies.forEach(enemy => {
+      if (Math.floor(enemy.x) === Math.floor(player.x)) {
+        console.log('hit');
+      }
+    })
   }
   render() {
+    drawHitBox(this);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
   handleInput(keyPress) {
@@ -125,3 +132,14 @@ document.addEventListener('keyup', function(e) {
 
   player.handleInput(allowedKeys[e.keyCode]);
 });
+
+//for debugging
+let drawHitBox = (entity) => {
+  ctx.strokeStyle = 'red';
+  if (entity === player) {
+    ctx.strokeRect(entity.x+17, entity.y+63, 67, 77);
+  } else {
+    ctx.strokeRect(entity.x, entity.y+77, 100, 68);
+  }
+
+}
