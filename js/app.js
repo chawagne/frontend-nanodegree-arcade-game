@@ -10,6 +10,12 @@ class Enemy {
     this.speed = this.randomSpeed();
     this.x = 0;
     this.y = this.randomLocation();
+    this.hitBox = {
+      hitX: 0,
+      hitY: 77,
+      width: 100,
+      height: 68,
+    }
   }
 
   // Update the enemy's position, required method for game
@@ -23,7 +29,7 @@ class Enemy {
 
   // Draw the enemy on the screen, required method for game
   render() {
-    drawHitBox(this);
+    drawHitBox(this.x + this.hitBox.hitX, this.y + this.hitBox.hitY, this.hitBox.width, this.hitBox.height);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
   randomSpeed() {
@@ -68,6 +74,12 @@ class Player {
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
+    this.hitBox = {
+      hitX: 17,
+      hitY: 63,
+      width: 67,
+      height: 77,
+    }
   }
 
   update() {
@@ -79,7 +91,7 @@ class Player {
     })
   }
   render() {
-    drawHitBox(this);
+    drawHitBox(this.x + this.hitBox.hitX, this.y + this.hitBox.hitY, this.hitBox.width, this.hitBox.height);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
   handleInput(keyPress) {
@@ -117,6 +129,7 @@ class Player {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+let debug = true;
 let allEnemies = [new Enemy()];
 const player = new Player();
 
@@ -134,12 +147,9 @@ document.addEventListener('keyup', function(e) {
 });
 
 //for debugging
-let drawHitBox = (entity) => {
+let drawHitBox = (x, y, width, height) => {
   ctx.strokeStyle = 'red';
-  if (entity === player) {
-    ctx.strokeRect(entity.x+17, entity.y+63, 67, 77);
-  } else {
-    ctx.strokeRect(entity.x, entity.y+77, 100, 68);
+  if (debug === true) {
+    ctx.strokeRect(x, y, width, height);
   }
-
 }
