@@ -8,8 +8,9 @@ class Enemy {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.speed = this.randomSpeed();
-    this.x = 0;
+    this.x = -100;
     this.y = this.randomLocation();
+    this.despawn = false;
     this.hitBox = {
       hitX: 0,
       hitY: 77,
@@ -25,6 +26,7 @@ class Enemy {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += (this.speed * dt);
+    this.despawn = this.despawnCheck();
   }
 
   // Draw the enemy on the screen, required method for game
@@ -62,6 +64,10 @@ class Enemy {
         return 228;
     }
   }
+  despawnCheck() {
+      return this.x > 500;
+    }
+
 
 }
 
@@ -83,20 +89,35 @@ class Player {
   }
 
   update() {
-    this.checkCollisions(allEnemies);
+    //Get player corner coordinates
+    let playerLocation = {
+      upLeft: [this.x + this.hitBox.hitX, this.y + this.hitBox.hitY],
+      upRight: [this.x + this.hitBox.hitX + this.hitBox.width, this.y + this.hitBox.hitY],
+      downLeft: [this.x + this.hitBox.hitX, this.y + this.hitBox.hitY + this.hitBox.height],
+      downRight: [this.x + this.hitBox.hitX + this.hitBox.width, this.y + this.hitBox.hitY + this.hitBox.height],
+      verticalCenter: (this.y + this.hitBox.hitY + this.hitBox.height + this.hitBox.width + this.y + this.hitBox.hitY) / 2,
+    }
+    this.checkCollisions(playerLocation, allEnemies);
   }
-   checkCollisions(allEnemies) {
+  checkCollisions(playerLocation, allEnemies) {
 
-     allEnemies.forEach( (enemy) => {
-        let location = {
-          upLeft: enemy.x + enemy.hitBox.hitX,
-          upRight: this.upLeft + enemy.hitBox.width,
-          downLeft:0,
-          downRight:0,
-        }
-    //   console.log(enemy.x + enemy.hitBox.hitX);
-     });
-}
+    allEnemies.forEach((enemy) => {
+      let enemyLocation = {
+        left: enemy.x + enemy.hitBox.hitX,
+        right: enemy.x + enemy.hitBox.hitX + enemy.hitBox.width,
+        up: enemy.y + enemy.hitBox.hitY,
+        down: enemy.y + enemy.hitBox.hitY + enemy.hitBox.height,
+      }
+      //Needs to be refactored into functions for performance
+      let one = (playerLocation.verticalCenter <= enemyLocation.down) && (playerLocation.verticalCenter >= enemyLocation.up);
+      let two = (playerLocation.upLeft[0] <= enemyLocation.right && playerLocation.upLeft[0] >= enemyLocation.left)
+      let three = (playerLocation.upRight[0] <= enemyLocation.right && playerLocation.upRight[0] >= enemyLocation.left)
+      if (one && (two || three)) {
+        console.log('hit!')
+      }
+
+    });
+  }
 
 
   render() {
@@ -166,7 +187,13 @@ let drawHitBox = (x, y, width, height) => {
 //spawn enemy
 let spawnEnemy = () => {
   let roll = Math.floor(Math.random() * 1000) + 1;
-  if (roll >= 990) {
-  allEnemies.push(new Enemy)
+  if (roll >= 992) {
+    allEnemies.push(new Enemy);
+  }
 }
+let despawnEnemy = (allEnemies) => {
+  purgedEnemis = allEnemies.filter( (enemy) =>{
+    return (enemy.despawn === false);
+  })
+  return purgedEnemis;
 }

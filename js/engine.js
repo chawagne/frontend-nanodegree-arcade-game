@@ -80,6 +80,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         spawnEnemy();
+        allEnemies = despawnEnemy(allEnemies);
         // checkCollisions();
     }
 
