@@ -87,7 +87,9 @@ class Player {
       height: 77,
     }
   }
-
+  resetPlayer() {
+    //fill this out
+  }
   update() {
     //Get player corner coordinates
     let playerLocation = {
@@ -113,7 +115,7 @@ class Player {
       let two = (playerLocation.upLeft[0] <= enemyLocation.right && playerLocation.upLeft[0] >= enemyLocation.left)
       let three = (playerLocation.upRight[0] <= enemyLocation.right && playerLocation.upRight[0] >= enemyLocation.left)
       if (one && (two || three)) {
-        console.log('hit!')
+        resetGame();
       }
 
     });
@@ -159,9 +161,9 @@ class Player {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-let debug = true;
+let debug = false;
 let allEnemies = [];
-const player = new Player();
+let player = new Player();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -197,3 +199,10 @@ let despawnEnemy = (allEnemies) => {
   })
   return purgedEnemis;
 }
+
+let resetGame = () => {
+  allEnemies = [];
+  player = new Player();
+}
+
+//Add debug iffe
