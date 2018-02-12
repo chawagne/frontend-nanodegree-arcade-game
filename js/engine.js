@@ -81,7 +81,6 @@ var Engine = (function(global) {
         updateEntities(dt);
         spawnEnemy();
         allEnemies = despawnEnemy(allEnemies);
-        // checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the

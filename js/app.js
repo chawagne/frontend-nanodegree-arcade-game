@@ -1,11 +1,14 @@
 // Enemies our player must avoid
 class Enemy {
   constructor() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    /*
+    sprite (string): Reference to enemy image.
+    speed (num): Speed of the enemy.
+    x (num): Spawn point on the x-axis.
+    y (num): Spawn point on the y-axis.
+    despawn (bool): Should the enemy be despawned.
+    hitBox (object):  Contains the top-left coordinate of the enemy png, as well as the hitbox width and height.  This is used for collision detection.
+    */
     this.sprite = 'images/enemy-bug.png';
     this.speed = this.randomSpeed();
     this.x = -100;
@@ -22,20 +25,20 @@ class Enemy {
   // Update the enemy's position, required method for game
   // Parameter: dt, a time delta between ticks
   update(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    //The new x coordinate is the speed of the enemy multiplied by the game timer.
     this.x += (this.speed * dt);
+    //Check to see if the enemy should despawn.
     this.despawn = this.despawnCheck();
   }
-
-  // Draw the enemy on the screen, required method for game
+  // Draw the enemy on the screen
   render() {
+    //Draw hit box if in debug mode
     drawHitBox(this.x + this.hitBox.hitX, this.y + this.hitBox.hitY, this.hitBox.width, this.hitBox.height);
+    //Draw the enemy
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+  //Randomly determine and return speed.  There is a 1/3 chance of it being fast, medium, or slow.
   randomSpeed() {
-    //Randomly determine speed
     let randomNum = Math.floor(Math.random() * 3);
     switch (randomNum) {
       //Slow speed
@@ -49,34 +52,41 @@ class Enemy {
         return 300;
     }
   }
+  //Randomly determine and return spawn row.  There is a 1/3 chance of it being top, middle, or bottom.
   randomLocation() {
-    //Randomly determine speed
+    //Randomly determine spawn row
     let randomNum = Math.floor(Math.random() * 3);
     switch (randomNum) {
-      //Slow speed
+      //Top row
       case 0:
         return 62;
-        //Medium speed
+        //Middle row
       case 1:
         return 145;
-        //Fast speed
+        //Bottom row
       case 2:
         return 228;
     }
   }
+  //Check to see if enemy should despawn.
   despawnCheck() {
-      return this.x > 500;
-    }
+    //After the x coordinate is > 500, the enemy will no longer be visible on the canvas and can be removed.
+    return this.x > 500;
+  }
 
 
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
+//The player character
 class Player {
   constructor() {
+    /*
+    sprite (string): Reference to player image.
+    x (num): Spawn point on the x-axis.
+    y (num): Spawn point on the y-axis.
+    hitBox (object):  Contains the top-left coordinate of the player png, as well as the hitbox width and height.  This is used for collision detection.
+    */
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
@@ -90,8 +100,10 @@ class Player {
   resetPlayer() {
     //fill this out
   }
+
+  //This is called by the engine for each game tick.
   update() {
-    //Get player corner coordinates
+    //playerLocation (object): The player's coordinates at each corner, as well as the center point vertically.
     let playerLocation = {
       upLeft: [this.x + this.hitBox.hitX, this.y + this.hitBox.hitY],
       upRight: [this.x + this.hitBox.hitX + this.hitBox.width, this.y + this.hitBox.hitY],
@@ -99,10 +111,13 @@ class Player {
       downRight: [this.x + this.hitBox.hitX + this.hitBox.width, this.y + this.hitBox.hitY + this.hitBox.height],
       verticalCenter: (this.y + this.hitBox.hitY + this.hitBox.height + this.hitBox.width + this.y + this.hitBox.hitY) / 2,
     }
+    //Check for collision using the current player's location and enemy locations.
     this.checkCollisions(playerLocation, allEnemies);
   }
+  //Check to see if the player has collided with the enemy.
+  //parameters: playerLocation (object): The player's position.  allEnemies (array): All enemies currently on the screen.
   checkCollisions(playerLocation, allEnemies) {
-
+    //For each enemy, calculate the left, right, top, and bottom bounds of their hitbox.
     allEnemies.forEach((enemy) => {
       let enemyLocation = {
         left: enemy.x + enemy.hitBox.hitX,
@@ -121,13 +136,18 @@ class Player {
     });
   }
 
-
+  // Draw the player on the screen
   render() {
+    //Draw the player hitbox if in debug mode.
     drawHitBox(this.x + this.hitBox.hitX, this.y + this.hitBox.hitY, this.hitBox.width, this.hitBox.height);
+    //Draw the player.
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+  // Handle keyboard presses from the user.
+  // parameters: keyPress (string): The arrow key pressed.
   handleInput(keyPress) {
-    /*Check to see if character is in bounds.
+    /*
+    For each keypress, check to see if character is in bounds.  If they are, update their x or y poisition.
       x range 0 : 400
       y range -15 : 400
     */
@@ -158,9 +178,13 @@ class Player {
 
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+
+/*
+Global objects
+debug (bool): If true, the game is in debug mode.  Player and enemy hitboxes will be visible.
+allEnemies (array): A list of all enemy pbject on the screen.
+player (object): The player.
+*/
 let debug = false;
 let allEnemies = [];
 let player = new Player();
@@ -186,23 +210,26 @@ let drawHitBox = (x, y, width, height) => {
   }
 }
 
-//spawn enemy
+//Randomly spawns a new enemy object and adds it to the list of enemies.
 let spawnEnemy = () => {
+  // 9/1000 chance that an enemy will spawn.
   let roll = Math.floor(Math.random() * 1000) + 1;
   if (roll >= 992) {
     allEnemies.push(new Enemy);
   }
 }
+//Returns an array of all enemies, removing those that are no longer onscreen.
+//parameters: An array of all displayed enemies.
 let despawnEnemy = (allEnemies) => {
-  purgedEnemis = allEnemies.filter( (enemy) =>{
+  //Enemies that can be despawned are removed from the list of all enemies.
+  purgedEnemis = allEnemies.filter((enemy) => {
     return (enemy.despawn === false);
   })
   return purgedEnemis;
 }
 
+//Resets the game.  Clears the list of enemies, and creates a new player.
 let resetGame = () => {
   allEnemies = [];
   player = new Player();
 }
-
-//Add debug iffe
