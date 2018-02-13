@@ -229,7 +229,7 @@ debug (bool): If true, the game is in debug mode.  Player and enemy hitboxes wil
 allEnemies (array): A list of all enemy pbject on the screen.
 player (object): The player.
 */
-let debug = true;
+let debug = false;
 let allEnemies = [];
 let player = new Player();
 
