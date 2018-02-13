@@ -126,16 +126,34 @@ class Player {
         down: enemy.y + enemy.hitBox.hitY + enemy.hitBox.height,
       }
       //Needs to be refactored into functions for performance
-      let one = (playerLocation.verticalCenter <= enemyLocation.down) && (playerLocation.verticalCenter >= enemyLocation.up);
-      let two = (playerLocation.upLeft[0] <= enemyLocation.right && playerLocation.upLeft[0] >= enemyLocation.left)
-      let three = (playerLocation.upRight[0] <= enemyLocation.right && playerLocation.upRight[0] >= enemyLocation.left)
-      if (one && (two || three)) {
+      let vertical = this.checkVerticalCollision(playerLocation.verticalCenter, enemyLocation);
+      let playerLeft = this.checkLeftCollision(playerLocation.upLeft[0], enemyLocation);
+      let playerRight = this.checkRightCollision(playerLocation.upRight[0], enemyLocation);
+      if (vertical && (playerLeft || playerRight)) {
         resetGame();
       }
 
     });
   }
 
+  //Checks for y-axis collisions
+  //parameters: playerLeftLocation (number): player x-axis location left border, enemyLocation (object): the current enemy's location.
+  checkLeftCollision(playerLeftLocation, enemyLocation) {
+    return (playerLeftLocation <= enemyLocation.right && playerLeftLocation >= enemyLocation.left);
+  }
+
+  //Checks for y-axis collisions
+  //parameters: playerRightLocation (number): player x-axis location right border, enemyLocation (object): the current enemy's location.
+  checkRightCollision(playerRightLocation, enemyLocation) {
+    return (playerRightLocation <= enemyLocation.right && playerRightLocation >= enemyLocation.left);
+
+  }
+
+  //Checks for y-axis collisions
+  //parameters: playerVerticalLocation (number): player y-axis location, enemyLocation (object): the current enemy's location.
+  checkVerticalCollision(playerVerticalLocation, enemyLocation) {
+    return (playerVerticalLocation <= enemyLocation.down) && (playerVerticalLocation >= enemyLocation.up);
+  }
   // Draw the player on the screen
   render() {
     //Draw the player hitbox if in debug mode.
@@ -212,9 +230,9 @@ let drawHitBox = (x, y, width, height) => {
 
 //Randomly spawns a new enemy object and adds it to the list of enemies.
 let spawnEnemy = () => {
-  // 9/1000 chance that an enemy will spawn.
+  //chance that an enemy will spawn.
   let roll = Math.floor(Math.random() * 1000) + 1;
-  if (roll >= 992) {
+  if (roll >= 988) {
     allEnemies.push(new Enemy);
   }
 }
