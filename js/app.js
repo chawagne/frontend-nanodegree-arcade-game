@@ -34,6 +34,7 @@ class Enemy {
   render() {
     //Draw hit box if in debug mode
     drawHitBox(this.x + this.hitBox.hitX, this.y + this.hitBox.hitY, this.hitBox.width, this.hitBox.height);
+
     //Draw the enemy
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
@@ -96,6 +97,8 @@ class Player {
       width: 67,
       height: 77,
     }
+    this.messageTimer = 100;
+    this.score;
   }
   resetPlayer() {
     //fill this out
@@ -113,6 +116,15 @@ class Player {
     }
     //Check for collision using the current player's location and enemy locations.
     this.checkCollisions(playerLocation, allEnemies);
+  }
+
+  getReady() {
+    if (this.messageTimer >= 0) {
+      ctx.font = "60px Georgia";
+      ctx.fillText("Get ready!", 10, 200);
+      this.messageTimer -= 1;
+      //console.log(this.messageTimer)
+    }
   }
   //Check to see if the player has collided with the enemy.
   //parameters: playerLocation (object): The player's position.  allEnemies (array): All enemies currently on the screen.
@@ -156,6 +168,8 @@ class Player {
   }
   // Draw the player on the screen
   render() {
+    //Show 'get ready!''
+    this.getReady();
     //Draw the player hitbox if in debug mode.
     drawHitBox(this.x + this.hitBox.hitX, this.y + this.hitBox.hitY, this.hitBox.width, this.hitBox.height);
     //Draw the player.
@@ -169,6 +183,8 @@ class Player {
       x range 0 : 400
       y range -15 : 400
     */
+    if (this.messageTimer < 0){
+    console.log(this.messageTimer);
     switch (keyPress) {
       case 'up':
         //Check for win here
@@ -192,6 +208,7 @@ class Player {
         }
         break;
     }
+    }
   }
 
 }
@@ -203,7 +220,7 @@ debug (bool): If true, the game is in debug mode.  Player and enemy hitboxes wil
 allEnemies (array): A list of all enemy pbject on the screen.
 player (object): The player.
 */
-let debug = false;
+let debug = true;
 let allEnemies = [];
 let player = new Player();
 
@@ -220,7 +237,7 @@ document.addEventListener('keyup', function(e) {
   player.handleInput(allowedKeys[e.keyCode]);
 });
 
-//for debugging
+//for debugging, displays the hitbox of all enemis and player.
 let drawHitBox = (x, y, width, height) => {
   ctx.strokeStyle = 'red';
   if (debug === true) {
