@@ -98,10 +98,16 @@ class Player {
       height: 77,
     }
     this.messageTimer = 100;
-    this.score;
+    this.score = 0;
   }
+
+  //This is called when the player reaches the water.
+  //The player location is reset, and score is increased.
   resetPlayer() {
-    //fill this out
+    this.score += 1;
+    this.x = 200;
+    this.y = 400;
+    this.messageTimer = 100;
   }
 
   //This is called by the engine for each game tick.
@@ -120,10 +126,11 @@ class Player {
 
   getReady() {
     if (this.messageTimer >= 0) {
-      ctx.font = "60px Georgia";
-      ctx.fillText("Get ready!", 10, 200);
+      ctx.font = "60px Arial";
+      ctx.fillStyle = "#ff0080";
+      ctx.fillText(`Score: ${this.score}!`, 100, 200);
+      ctx.fillText(`Get ready...`, 100, 350);
       this.messageTimer -= 1;
-      //console.log(this.messageTimer)
     }
   }
   //Check to see if the player has collided with the enemy.
@@ -178,36 +185,38 @@ class Player {
   // Handle keyboard presses from the user.
   // parameters: keyPress (string): The arrow key pressed.
   handleInput(keyPress) {
-    /*
-    For each keypress, check to see if character is in bounds.  If they are, update their x or y poisition.
-      x range 0 : 400
-      y range -15 : 400
-    */
-    if (this.messageTimer < 0){
-    console.log(this.messageTimer);
-    switch (keyPress) {
-      case 'up':
-        //Check for win here
-        if (this.y - 83 >= -15) {
-          this.y -= 83;
-        }
-        break;
-      case 'down':
-        if (this.y + 83 <= 400) {
-          this.y += 83;
-        }
-        break;
-      case 'left':
-        if (this.x - 100 >= 0) {
-          this.x -= 100;
-        }
-        break;
-      case 'right':
-        if (this.x + 100 <= 400) {
-          this.x += 100;
-        }
-        break;
-    }
+    //Don't proceed unless the message timer has run out.
+    if (this.messageTimer < 0) {
+      /*
+      For each keypress, check to see if character is in bounds.  If they are, update their x or y poisition.
+        x range 0 : 400
+        y range -15 : 400
+      */
+      switch (keyPress) {
+        case 'up':
+          if (this.y - 83 >= -15) {
+            this.y -= 83;
+          }
+          if (this.y === -15) {
+            this.resetPlayer();
+          }
+          break;
+        case 'down':
+          if (this.y + 83 <= 400) {
+            this.y += 83;
+          }
+          break;
+        case 'left':
+          if (this.x - 100 >= 0) {
+            this.x -= 100;
+          }
+          break;
+        case 'right':
+          if (this.x + 100 <= 400) {
+            this.x += 100;
+          }
+          break;
+      }
     }
   }
 
@@ -249,7 +258,7 @@ let drawHitBox = (x, y, width, height) => {
 let spawnEnemy = () => {
   //chance that an enemy will spawn.
   let roll = Math.floor(Math.random() * 1000) + 1;
-  if (roll >= 988) {
+  if (roll >= 968) {
     allEnemies.push(new Enemy);
   }
 }
