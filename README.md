@@ -1,5 +1,9 @@
 # Classic Arcade Game
 
+## Goal
+
+This goal of this project was to become more familiar with objects and object-oriented programming key concepts.
+
 ## How to play
 Your goal is to move your player to the water.  Colliding with a bug will cause you to lose your points and start over.  Try to get as many points as possible!
 
